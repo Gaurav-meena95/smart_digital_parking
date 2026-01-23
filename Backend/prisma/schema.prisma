@@ -11,4 +11,104 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  
 }
+
+model User {
+  id               String          @id @default(cuid())
+  name             String
+  email            String          @unique
+  password         String
+  phone            String
+  role             Role            @default(user)
+  approvalStatus   ApprovalStatus? @default(pending)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  vehicles         Vehicle[]
+  parkings         Parking[] @relation("UserParking")
+  assignedparkings Parking[] @relation("AssignedDriver")
+}
+enum ApprovalStatus {
+  pending
+  approved
+  rejected
+}
+
+enum Role {
+  user
+  manager
+  driver
+  admin
+}
+
+
+model Vehicle {
+  id            String      @id @default(cuid())
+  vehicleName   String
+  vehicleNumber String      @unique
+  ownerName     String
+  ownerId       String?
+  vehicleType   VehicleType @default(Car)
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  owner         User?       @relation(fields: [ownerId], references: [id])
+  parkings      Parking[]
+}
+
+model Parking {
+  id               String        @id @default(cuid())
+  ticketId         String        @unique
+  userId           String
+  vehicleId        String
+  assignedDriverId String?
+  location         String
+  address          String
+  parkingSlot      String?
+  taskType         TaskType      @default(Park)
+  assignedAt       DateTime?
+  entryTime        DateTime
+  exitTime         DateTime?
+  baseRate         Float         @default(100)
+  serviceFee       Float         @default(30)
+  gst              Float         @default(20)
+  totalAmount      Float
+  paymentMethod    String
+  status           ParkingStatus @default(active)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation("UserParking" ,fields: [userId], references: [id])
+  vehicle          Vehicle       @relation(fields: [vehicleId], references: [id])
+  assignedDriver   User?         @relation("AssignedDriver", fields: [assignedDriverId], references: [id])
+
+}
+enum ParkingStatus {
+
+  pending
+  active
+  in_progress
+  completed
+  cancelled
+  
+}
+enum TaskType {
+  Park
+  Retrieve
+}
+
+enum VehicleType {
+  Car
+  Bike
+  Cycle
+  Jeep
+  Bus
+  Truck
+  Van
+  Scooter
+  Auto
+  Tractor
+  Ambulance
+  FireTruck
+  PoliceCar
+}
+
