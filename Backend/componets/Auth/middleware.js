@@ -4,11 +4,13 @@ const sec_key = process.env.sec_key
 const verifyUserMiddleware = (req,res,next)=>{
     try {
         const Authheader = req.headers.authorization
+
         const refreshToken = req.headers['x-refresh-token']
         if (!Authheader){
             return res.status(401).json({ message: "Authorization header missing" });
         }
-        const [prefix,token] = Authheader.split(' Toekn is Absent')
+        const [prefix,token] = Authheader.split(' ')
+
         if (!token){
             return res.status(401).json({ message: "Token is not valid" });
         }

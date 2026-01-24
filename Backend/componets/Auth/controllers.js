@@ -57,7 +57,6 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password, role } = req.body
-        console.log('object',email)
 
         const value = validationInput({ email, password, role })
         if (value) {
