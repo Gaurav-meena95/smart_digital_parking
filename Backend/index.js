@@ -9,6 +9,7 @@ const userProfile = require('./componets/User/profile/routes')
 const parkingRoutes = require('./componets/Parking/routes')
 const adminRoutes = require('./componets/Admin/routes')
 const driverRoutes = require('./componets/Driver/routes')
+const managerRoutes = require('./componets/Manager/routes')
 
 const connectDB = require('./db/config')
 
@@ -24,6 +25,8 @@ app.use('/api/users', userProfile)
 app.use('/api/parking', parkingRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/driver', driverRoutes)
+app.use('/api/manager', managerRoutes)
+
 
 
 PORT = process.env.PORT || 3000
