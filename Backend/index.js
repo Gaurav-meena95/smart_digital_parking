@@ -4,7 +4,9 @@ const app = express()
 app.use(express.json())
 
 const authRoutes = require('./componets/Auth/routes')
+const connectDB = require('./db/config')
 
+connectDB();
 app.get('/',(req,res)=>{
     return res.status(200).json({message:'Smart Digital  parking app running'})
 })
