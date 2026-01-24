@@ -154,7 +154,7 @@ const getActiveparking = async (req, res) => {
         if (!parking) {
             return res.status(404).json({ message: 'Active parking session not found' })
         }
-        res.status(200).json({ success: true, data: { parking } })
+        res.status(200).json({  data: { parking } })
 
 
     } catch (error) {
@@ -175,7 +175,7 @@ const getparkingHistory = async (req, res) => {
         }).sort({ entryTime: -1 })
 
         res.status(200).json({
-            success: true,
+            
             data: parkings
         })
     } catch (error) {
@@ -202,7 +202,7 @@ const getparkingById = async (req, res) => {
         }
 
         res.status(200).json({
-            success: true,
+            
             data: { parking }
         })
     } catch (error) {

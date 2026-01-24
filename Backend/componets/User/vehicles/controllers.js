@@ -122,7 +122,7 @@ const getAllVehicles = async (req, res) => {
         }).sort({ createdAt: -1 })
 
         res.status(200).json({
-            success: true,
+            
             message: 'Vehicles fetched successfully',
             data: vehicles
         })
