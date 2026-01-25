@@ -130,13 +130,12 @@ const approveDriver = async (req, res) => {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Admin access required' })
         }
-        const { userId } = req.query
+        const { userId } = req.body
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' })
         }
-
         const user = await User.updateOne(
-            {_id: userId },
+            { _id: userId },
             { approvalStatus: 'approved' },
         )
 
@@ -155,13 +154,13 @@ const rejectDriver = async (req, res) => {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Admin access required' })
         }
-        const { userId } = req.query
+        const { userId } = req.body
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' })
         }
         const user = await User.updateOne(
-            {_id: userId },
-            
+            { _id: userId },
+
             { approvalStatus: 'rejected' },
         )
 
