@@ -1,7 +1,13 @@
 require('dotenv').config()
+const cors = require('cors')
 const express = require('express')
 const app = express()
 app.use(express.json())
+
+app.use(cors({
+     origin:'http://localhost:5173',
+    credentials:true
+}))
 
 const authRoutes = require('./componets/Auth/routes')
 const vehicleManageRoutes = require('./componets/User/vehicles/routes')

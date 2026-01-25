@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Car, Eye, EyeOff, ArrowLeft, User, Shield, Truck, Settings } from 'lucide-react'
-// import { api } from '../../../services/api'
 
 function Login() {
+
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState('user');
@@ -11,6 +12,7 @@ function Login() {
     email: '',
     password: ''
   });
+
 
   const roles = [
     {
@@ -78,6 +80,8 @@ function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  const VITE_API_BASE_KEY = import.meta.env.VITE_API_BASE_KEY
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -89,22 +93,28 @@ function Login() {
 
     setLoading(true)
     try {
-      const result = await api.auth.login({
-        email: formData.email,
-        password: formData.password,
-        role: selectedRole
+      const response = await fetch(`${VITE_API_BASE_KEY}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          role: selectedRole
+        })
       })
+      const data = await response.json()
+      console.log(data)
 
-      if (result.token) {
-        localStorage.setItem('token', result.token)
-        localStorage.setItem('refreshToken', result.refreshToken)
-        localStorage.setItem('user', JSON.stringify(result.user))
+      if (data.token) {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('refreshToken', data.refreshToken)
+        localStorage.setItem('user', JSON.stringify(data.user))
 
-        if (result.user.role === 'admin') {
+        if (data.user.role === 'admin') {
           navigate('/admin')
-        } else if (result.user.role === 'manager') {
+        } else if (data.user.role === 'manager') {
           navigate('/manager')
-        } else if (result.user.role === 'driver') {
+        } else if (data.user.role === 'driver') {
           navigate('/driver')
         } else {
           navigate('/home')
@@ -122,7 +132,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-100">
+    <div className="min-h-screen bg-indigo-50">
       <div className="min-h-screen flex items-center justify-center px-6 py-12">
         <div className="max-w-md w-full rounded-2xl p-5 shadow-xl border border-gray-100">
           <button
@@ -135,7 +145,7 @@ function Login() {
 
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center">
                 <Car className="w-7 h-7 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900">Smart parking</h1>
@@ -158,18 +168,14 @@ function Login() {
                     onClick={() => setSelectedRole(role.id)}
                     className={`p-4 rounded-xl border-2 transition-all text-left ${selectedRole === role.id
                       ? `border-indigo-600 ${role.bgColor}`
-                      : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
+                      : 'border-gray-200 hover:border-gray-300 bg-white'}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selectedRole === role.id ? role.bgColor : 'bg-gray-100'
-                        }`}>
-                        <Icon className={`w-5 h-5 ${selectedRole === role.id ? role.textColor : 'text-gray-600'
-                          }`} />
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selectedRole === role.id ? role.bgColor : 'bg-gray-100'}`}>
+                        <Icon className={`w-5 h-5 ${selectedRole === role.id ? role.textColor : 'text-gray-600'}`} />
                       </div>
                       <div>
-                        <p className={`font-medium ${selectedRole === role.id ? 'text-gray-900' : 'text-gray-700'
-                          }`}>
+                        <p className={`font-medium ${selectedRole === role.id ? 'text-gray-900' : 'text-gray-700'}`}>
                           {role.name}
                         </p>
                         <p className="text-xs text-gray-500">{role.description}</p>
@@ -181,7 +187,7 @@ function Login() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+          <form onSubmit={handleSubmit} className="bg-white text-black rounded-2xl p-8 shadow-sm border border-gray-100">
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -210,7 +216,7 @@ function Login() {
                     onChange={handleInputChange}
                     placeholder="Enter your password"
                     required
-                    className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all pr-12"
+                    className="w-full px-4 py-3  rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all pr-12"
                   />
                   <button
                     type="button"
@@ -243,7 +249,7 @@ function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Signing in...' : `Sign In as ${roles.find(r => r.id === selectedRole)?.name}`}
               </button>
