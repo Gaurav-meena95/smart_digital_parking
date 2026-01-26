@@ -1,4 +1,5 @@
 const Parking = require('../Parking/db')
+const User = require('../Auth/db')
 
 const getAssignments = async (req, res) => {
     try {
@@ -8,14 +9,20 @@ const getAssignments = async (req, res) => {
         if (req.user.role !== 'driver') {
             return res.status(403).json({ message: 'Access denied. Driver role required.' })
         }
+        const user = await User.find({ _id: req.user.id })
         const assignments = await Parking.find({
             assignedDriverId: req.user.id,
             status: 'pending'
         }).sort({ assignedAt: -1 })
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Assignment fetched successfully",
-            data: assignments
+            data: assignments,
+            
+            name: user[0].name
+
+
+
         })
     } catch (error) {
         console.log(error)

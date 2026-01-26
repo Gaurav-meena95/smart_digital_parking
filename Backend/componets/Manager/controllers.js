@@ -64,8 +64,8 @@ const addDriver = async (req, res) => {
             return res.status(403).json({ message: 'Manager access required' })
         }
 
-        const { fullName, phone, email } = req.body
-        const value = validationInput({ fullName, phone, email })
+        const { fullName, phone, email ,licenseNumber } = req.body
+        const value = validationInput({ fullName, phone, email ,licenseNumber})
         if (value) {
             return res.status(400).json({ message: `Missing field: ${value}` })
         }
@@ -83,7 +83,8 @@ const addDriver = async (req, res) => {
             password: hashedPassword,
             phone,
             role: 'driver',
-            approvalStatus: 'pending'
+            approvalStatus: 'pending',
+            licenseNumber:licenseNumber
         })
 
         return res.status(201).json({

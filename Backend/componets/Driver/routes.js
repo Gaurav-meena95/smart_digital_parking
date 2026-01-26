@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { verifyUserMiddleware } = require('../Auth/middleware')
-const {getAssignments,getCurrentAssignment,acceptAssignment,rejectAssignment,startTask,completeTask,getStats} = require('./controllers')
+const {getAssignments,getCurrentAssignment,acceptAssignment,rejectAssignment,completeTask} = require('./controllers')
 router.use(verifyUserMiddleware)
 
 router.get('/assignments', getAssignments)
