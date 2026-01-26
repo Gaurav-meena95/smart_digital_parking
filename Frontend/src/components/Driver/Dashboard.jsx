@@ -172,7 +172,7 @@ function DriverDashboard() {
     return (
         <div className="min-h-screen bg-gray-50 pb-8">
             <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8">
-                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white px-4 sm:px-8 py-8 sm:py-12 rounded-3xl mb-8">
+                <div className="bg-indigo-600 text-white px-4 sm:px-8 py-8 sm:py-12 rounded-3xl mb-8">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="flex-1">
                             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Driver Console</h1>
@@ -293,7 +293,7 @@ function DriverDashboard() {
                                         </button>
                                         <button
                                             onClick={() => handleAcceptAssignment(assignment)}
-                                            className="flex-1 bg-gradient-to-r from-green-600 to-green-500 text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:shadow-lg transition-all font-medium cursor-pointer"
+                                            className="flex-1 bg-linear-to-r from-green-600 to-green-500 text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:shadow-lg transition-all font-medium cursor-pointer"
                                         >
                                             <CheckCircle className="w-5 h-5" />
                                             Accept Assignment
@@ -322,7 +322,7 @@ function DriverDashboard() {
 
                                         <button
                                             onClick={handleCompleteTask}
-                                            className="w-full bg-gradient-to-r from-green-600 to-green-500 text-white py-4 rounded-xl font-medium hover:shadow-lg transition-all cursor-pointer"
+                                            className="w-full bg-linear-to-r from-green-600 to-green-500 text-white py-4 rounded-xl font-medium hover:shadow-lg transition-all cursor-pointer"
                                         >
                                             Complete Task
                                         </button>
@@ -374,7 +374,7 @@ function DriverDashboard() {
 
                                         <button
                                             onClick={handleStartTask}
-                                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-medium hover:shadow-lg transition-all cursor-pointer"
+                                            className="w-full bg-linear-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-medium hover:shadow-lg transition-all cursor-pointer"
                                         >
                                             {currentTask.taskType === 'park' ? 'Start parking' : 'Start Retrieval'}
                                         </button>

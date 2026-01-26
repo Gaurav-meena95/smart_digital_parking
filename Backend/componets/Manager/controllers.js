@@ -121,7 +121,7 @@ const reassignValet = async (req, res) => {
 
         const updatedparking = await Parking.updateOne(
             { _id: parkingId },
-            { assignedDriverId: driverId, assignedAt: new Date() },
+            { assignedDriverId: driverId, assignedAt: new Date() , status:"assigned"},
         )
         return res.status(200).json({
             message: 'Driver assigned successfully',
