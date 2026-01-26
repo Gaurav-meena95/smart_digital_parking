@@ -5,7 +5,6 @@ const verifyUserMiddleware = (req,res,next)=>{
     try {
         const Authheader = req.headers.authorization
         const refreshToken = req.headers['x-refresh-token']
-        console.log('lkjefbs',req.headers)
         if (!Authheader){
             return res.status(401).json({ message: "Authorization header missing" });
         }

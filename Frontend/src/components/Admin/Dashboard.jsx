@@ -59,7 +59,6 @@ function AdminDashboard() {
                 headers: header
             })
             const data = await response.json()
-            console.log('data;;--',data)
             setPendingDrivers(data.data || [])
         } catch (error) {
             console.error('Error fetching pending drivers:', error)
@@ -67,14 +66,17 @@ function AdminDashboard() {
     }
 
     const handleApproveDriver = async (userId) => {
-        console.log("handleApproveDriverdclkds:sc d",driver.id)
+
         try {
             const response = await fetch(`${VITE_API_BASE_KEY}/admin/approve-driver`, {
                 method: 'POST',
                 headers: header,
                 body: JSON.stringify({ userId })
             })
+            const data = await response.json()
+            console.log(data)
             alert('Driver approved successfully!')
+            fetchPendingDrivers()
         } catch (error) {
             alert('Failed to approve driver: ' + error.message)
         }
@@ -91,6 +93,7 @@ function AdminDashboard() {
                 body: JSON.stringify({ userId })
             })
             alert('Driver rejected successfully!')
+            fetchPendingDrivers()
         } catch (error) {
             alert('Failed to reject driver: ' + error.message)
         }
@@ -392,7 +395,7 @@ function AdminDashboard() {
                         ) : (
                             <div className="space-y-4">
                                 {pendingDrivers.map((driver) => (
-                                    <div key={driver.id} className="bg-gray-50 rounded-lg p-4 sm:p-6 border border-gray-200">
+                                    <div key={driver._id} className="bg-gray-50 rounded-lg p-4 sm:p-6 border border-gray-200">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
                                                 <h3 className="text-lg font-semibold text-gray-900 mb-1">{driver.name}</h3>
@@ -404,14 +407,14 @@ function AdminDashboard() {
                                             </div>
                                             <div className="flex gap-2 ml-4">
                                                 <button
-                                                    onClick={() => handleApproveDriver(driver.id)}
+                                                    onClick={() => handleApproveDriver(driver._id)}
                                                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 cursor-pointer"
                                                 >
                                                     <CheckCircle className="w-4 h-4" />
                                                     Approve
                                                 </button>
                                                 <button
-                                                    onClick={() => handleRejectDriver(driver.id)}
+                                                    onClick={() => handleRejectDriver(driver._id)}
                                                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 cursor-pointer"
                                                 >
                                                     <XCircle className="w-4 h-4" />

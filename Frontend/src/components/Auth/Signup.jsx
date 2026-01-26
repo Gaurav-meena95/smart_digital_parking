@@ -94,8 +94,8 @@ function Signup() {
         phone: formData.phone
         })
       })
-
-      alert('Account created successfully! Please login.')
+      const data = await response.json()
+      alert(data.message)
       navigate('/login')
     } catch (err) {
       setError(err.message || 'Signup failed')
