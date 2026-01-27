@@ -13,7 +13,7 @@ const getDashboardStats = async (req, res) => {
         today.setHours(0, 0, 0, 0)
 
         const activeCars = await Parking.countDocuments({
-            status: 'in_progress'
+            status: 'approved'
         })
 
         const pendingRetrieval = await Parking.countDocuments({
@@ -25,16 +25,36 @@ const getDashboardStats = async (req, res) => {
             createdAt: { $gte: today }
         })
 
+        const revenueResult = await Parking.aggregate([
+            {
+                $match: {
+                    status: 'completed',
+                    createdAt: { $gte: today }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: '$totalAmount' }
+                }
+            }
+        ])
+
+        const revenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0
+
         return res.status(200).json({
             activeCars,
             pendingRetrieval,
-            todayEntries
+            todayEntries,
+            revenue
         })
+
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'Internal Server Error' })
     }
 }
+
 const getparkingAssignments = async (req, res) => {
     try {
         if (!req.user || req.user.role !== 'manager') {

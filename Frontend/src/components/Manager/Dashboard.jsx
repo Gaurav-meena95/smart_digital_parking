@@ -50,7 +50,9 @@ function ManagerDashboard() {
 
             })
             const data = await response.json()
+            console.log('object',data)
             setStats(data);
+
         } catch (error) {
             console.error('Error fetching dashboard stats:', error);
         } finally {
@@ -206,7 +208,7 @@ function ManagerDashboard() {
                                 <Clock className="text-orange-600" />
                                 <div>
                                     <p className="text-sm text-gray-500">Retrieving</p>
-                                    <p className="text-xl font-semibold">{stats.retrieving}</p>
+                                    <p className="text-xl font-semibold">{stats.pendingRetrieval}</p>
                                 </div>
                             </div>
 
@@ -214,7 +216,7 @@ function ManagerDashboard() {
                                 <Ticket className="text-green-600" />
                                 <div>
                                     <p className="text-sm text-gray-500">Total Today</p>
-                                    <p className="text-xl font-semibold">{stats.totalToday}</p>
+                                    <p className="text-xl font-semibold">{stats.todayEntries}</p>
                                 </div>
                             </div>
 
