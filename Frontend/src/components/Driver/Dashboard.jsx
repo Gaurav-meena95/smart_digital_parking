@@ -14,7 +14,7 @@ function DriverDashboard() {
     }
     const navigate = useNavigate()
     const [assignments, setAssignments] = useState([]);
-    const [currentTask, setCurrentTask] = useState(null);
+    const [currentTask, setCurrentTask] = useState([]);
     const [stats, setStats] = useState({ today: { parked: 0, retrieved: 0 }, newAssignments: 0 });
     const [driverName, setDriverName] = useState('Driver');
     const [loading, setLoading] = useState(true);
@@ -38,21 +38,21 @@ function DriverDashboard() {
             if (data && data.name) {
                 setDriverName(data.name);
             }
+            if (assignmentsResponse.ok) {
+                setAssignments(data.data || []);
+            }
 
             const currentResponse = await fetch(`${VITE_API_BASE_KEY}/driver/current`,{
                  method: 'GET',
                 headers: header
             })
 
-            if (assignmentsResponse) {
-                setAssignments(assignmentsResponse.data || []);
+            const curr = await currentResponse.json()
+            if (currentResponse.ok){
+                setCurrentTask(curr.data)
             }
 
-            if (currentResponse && currentResponse.data) {
-                setCurrentTask(currentResponse.data);
-            }
-
-
+            
         } catch (err) {
             setError(err.message || 'Failed to load data');
         } finally {
@@ -63,12 +63,15 @@ function DriverDashboard() {
     const handleAcceptAssignment = async (assignment) => {
         try {
             setError(null);
-            const response = await api.driver.acceptAssignment(assignment.id);
-
-            if (response.success) {
-                setAssignments(prev => prev.filter(a => a.id !== assignment.id));
-                setCurrentTask(response.data);
-                await fetchStats();
+            const response = await fetch(`${VITE_API_BASE_KEY}/driver/accept`,{
+                method:'POST',
+                headers:header,
+                body:JSON.stringify({parkinId})
+            })
+            const data = await response.json()
+            if (response.ok) {
+                // setAssignments(prev => prev.filter(a => a.id !== assignment.id));
+                setCurrentTask(data);
             }
         } catch (err) {
             setError(err.message || 'Failed to accept assignment');
@@ -78,42 +81,35 @@ function DriverDashboard() {
     const handleRejectAssignment = async (assignment) => {
         try {
             setError(null);
-            const response = await api.driver.rejectAssignment(assignment.id);
+            const response = await fetch(`${VITE_API_BASE_KEY}/driver/reject`,{
+                method:'POST',
+                headers:header,
+                body:JSON.stringify({parkinId})
+            })
+            const data = await response.json()
+            if (response.ok) {
+                // setAssignments(prev => prev.filter(a => a.id !== assignment.id));
 
-            if (response.success) {
-                setAssignments(prev => prev.filter(a => a.id !== assignment.id));
-                await fetchStats();
             }
         } catch (err) {
             setError(err.message || 'Failed to reject assignment');
         }
     };
 
-    const handleStartTask = async () => {
-        if (!currentTask) return;
-
-        try {
-            setError(null);
-            setTaskInProgress(true);
-
-            const response = await api.driver.startTask(currentTask.id);
-
-            if (response.success) {
-            }
-        } catch (err) {
-            setError(err.message || 'Failed to start task');
-            setTaskInProgress(false);
-        }
-    };
 
     const handleCompleteTask = async () => {
         if (!currentTask) return;
 
         try {
             setError(null);
-            const response = await api.driver.completeTask(currentTask.id);
+            const response = await fetch(`${VITE_API_BASE_KEY}/driver/complete`,{
+                method:'POST',
+                headers:header,
+                body:JSON.stringify({parkinId})
+            })
+            const data = await response.json()
 
-            if (response.success) {
+            if (response.ok) {
                 setCurrentTask(null);
                 setTaskInProgress(false);
                 await fetchData();
@@ -123,22 +119,13 @@ function DriverDashboard() {
         }
     };
 
-    const fetchStats = async () => {
-        try {
-            const response = await api.driver.getStats();
-            if (response.success) {
-                setStats(response.data);
-            }
-        } catch (err) {
-        }
-    };
+ 
 
     const handleNotifications = () => {
         alert('Notifications - Coming Soon!');
     };
 
     const handleLogout = () => {
-        logout()
         navigate('/login')
     }
 
@@ -148,16 +135,7 @@ function DriverDashboard() {
         return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        const today = new Date();
-        if (date.toDateString() === today.toDateString()) {
-            return 'Today';
-        }
-        return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
-    };
-
+ 
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -373,7 +351,6 @@ function DriverDashboard() {
                                         </div>
 
                                         <button
-                                            onClick={handleStartTask}
                                             className="w-full bg-linear-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-medium hover:shadow-lg transition-all cursor-pointer"
                                         >
                                             {currentTask.taskType === 'park' ? 'Start parking' : 'Start Retrieval'}

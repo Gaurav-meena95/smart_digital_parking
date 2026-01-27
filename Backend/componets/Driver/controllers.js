@@ -65,7 +65,7 @@ const acceptAssignment = async (req, res) => {
             return res.status(403).json({ message: 'Access denied. Driver role required.' })
         }
 
-        const { parkingId } = req.query
+        const { parkingId } = req.body
         if (!parkingId) {
             return res.status(400).json({ message: 'parkingId is required' })
         }
