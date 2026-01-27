@@ -98,40 +98,57 @@ const addDriver = async (req, res) => {
 }
 
 const reassignValet = async (req, res) => {
-    try {
-        if (!req.user || req.user.role !== 'manager') {
-            return res.status(403).json({ message: 'Manager access required' })
-        }
-
-        const { parkingId, driverId } = req.body
-        const value = validationInput({ parkingId, driverId })
-        if (value) {
-            return res.status(400).json({ message: `Missing field: ${value}` })
-        }
-
-        const parking = await Parking.findOne({ _id: parkingId })
-        if (!parking) {
-            return res.status(404).json({ message: 'parking not found' })
-        }
-
-        const driver = await User.findOne({ _id: driverId })
-        if (!driver || driver.role !== 'driver') {
-            return res.status(404).json({ message: 'Driver not found' })
-        }
-
-        const updatedparking = await Parking.updateOne(
-            { _id: parkingId },
-            { assignedDriverId: driverId, assignedAt: new Date() , status:"assigned"},
-        )
-        return res.status(200).json({
-            message: 'Driver assigned successfully',
-            parking: updatedparking
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: 'Internal Server Error' })
+  try {
+    if (!req.user || req.user.role !== 'manager') {
+      return res.status(403).json({ message: 'Manager access required' })
     }
+    
+    const { parkingId, driverId } = req.body
+    const value = validationInput({ parkingId, driverId })
+    if (value) {
+      return res.status(400).json({ message: `Missing field: ${value}` })
+    }
+
+    const parking = await Parking.findById(parkingId)
+    if (!parking) {
+      return res.status(404).json({ message: 'Parking not found' })
+    }
+
+    if (['completed', 'cancelled'].includes(parking.status)) {
+      return res.status(400).json({
+        message: `Cannot assign driver to ${parking.status} parking`
+      })
+    }
+
+    const driver = await User.findById(driverId)
+    if (!driver || driver.role !== 'driver') {
+      return res.status(404).json({ message: 'Driver not found' })
+    }
+
+    if (parking.assignedDriverId?.toString() === driverId) {
+      return res.status(400).json({ message: 'Driver already assigned' })
+    }
+
+    const updatedParking = await Parking.findByIdAndUpdate(
+      parkingId,
+      {
+        assignedDriverId: driverId,
+        assignedAt: new Date(),
+        status: 'assigned'
+      }
+    )
+
+    return res.status(200).json({
+      message: 'Driver assigned successfully',
+      parking: updatedParking
+    })
+
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
 }
+
 
 const getAvailableDrivers = async (req, res) => {
     try {

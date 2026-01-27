@@ -20,7 +20,7 @@ const startparking = async (req, res) => {
             ownerId: req.user.id,
             isActive: true
         })
-        console.log("fdglknd", vehicle)
+
         if (!vehicle) {
             return res.status(404).json({ message: 'Vehicle not found' })
         }
@@ -85,7 +85,7 @@ const requestRetrieval = async (req, res) => {
             return res.status(404).json({ message: 'Active parking session not found' })
         }
 
-        const updatedparking = await Parking.updateOne(
+        const updatedparking = await Parking.findByIdAndUpdate(
             parkingId,
             {
                 taskType: 'Retrieve',
@@ -95,8 +95,6 @@ const requestRetrieval = async (req, res) => {
             },
             { new: true }
         )
-            .populate('vehicleId')
-            .populate('userId', 'name email phone')
 
         res.status(200).json({
             message: 'Retrieval request submitted successfully',
@@ -119,14 +117,14 @@ const endparking = async (req, res) => {
         const parking = await Parking.findOne({
             _id: parkingId,
             userId: req.user.id,
-            status: { $in: ['active', 'pending', 'in_progress'] }
+            status: { $in: ['pending', 'in_progress'] }
         })
 
         if (!parking) {
             return res.status(404).json({ message: 'Active parking session not found' })
         }
-        const updatedparking = await Parking.updateOne(
-            { _id: parkingId },
+        const updatedparking = await Parking.findByIdAndUpdated(
+            parkingId ,
             { exitTime, status: 'completed' },
             { new: true }
         )

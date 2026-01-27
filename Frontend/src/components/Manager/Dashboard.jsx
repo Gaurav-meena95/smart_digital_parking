@@ -18,6 +18,8 @@ function ManagerDashboard() {
     const [showDrivers, setShowDrivers] = useState(false)
     const [drivers, setDrivers] = useState([])
     const [assignmentId, setAssignmentId] = useState(null)
+    const [assigned, setAssigned] = useState(false)
+
 
     const navigate = useNavigate();
     const [selectedFilter, setSelectedFilter] = useState('All');
@@ -48,7 +50,6 @@ function ManagerDashboard() {
 
             })
             const data = await response.json()
-
             setStats(data);
         } catch (error) {
             console.error('Error fetching dashboard stats:', error);
@@ -89,8 +90,12 @@ function ManagerDashboard() {
                 driverId: driverId
             })
         })
+
         const data = await response.json()
-        console.log('ds;kjfns;',data)
+        if(!response.ok){
+            alert(data.message)
+        }
+        setAssigned(true)
         setShowDrivers(false)
         setAssignmentId(null)
         fetchAssignments()
@@ -250,13 +255,16 @@ function ManagerDashboard() {
                                             <h3 className="text-xl font-semibold text-gray-900">{assignment.vehicleName}</h3>
                                             <p className="text-gray-600 mt-1">{assignment.vehicleNumber}</p>
                                         </div>
-                                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${assignment.status === 'In Progress'
-                                            ? 'bg-green-50 text-green-700 border border-green-200'
-                                            : assignment.status === 'Assigned'
-                                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                                : assignment.status === 'Pending Assignment'
-                                                    ? 'bg-orange-50 text-orange-700 border border-orange-200'
-                                                    : 'bg-gray-50 text-gray-700 border border-gray-200'
+                                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+                                            assignment.status === 'pending'
+                                            ? 'bg-red-50 text-red-700 border border-red-200'
+                                            : assignment.status === 'assigned'
+                                                ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                                                : assignment.status === 'parked'
+                                                    ? 'bg-orange-100 text-orange-700 border border-orange-200'
+                                                    : assignment.status === 'completed'
+                                                    ? 'bg-green-100  text-green-700 border border-green-300'
+                                                    : 'bg-red-300 text-red-800 border border-red-100'
                                             }`}>
                                             {assignment.status}
                                         </span>
@@ -326,7 +334,7 @@ function ManagerDashboard() {
             </div>
             {
                 showDrivers && (
-                    <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-center">
+                    <div className={`fixed inset-0 z-50 bg-black/40 flex justify-center items-center`}>
                         <div className="bg-white p-6 rounded w-1/2 max-h-[70vh] flex flex-col">
                         <h1 className='font-bold text-center'>Select Driver</h1>
 
@@ -339,8 +347,7 @@ function ManagerDashboard() {
                                 {drivers.map(driver => (
                                     <div
                                         key={driver._id}
-                                        className="flex justify-between items-center p-3 bg-indigo-50 rounded"
-                                    >
+                                        className= {assigned ? "blur-sm pointer-events-none bg-green-300" :  `flex justify-between items-center p-3 bg-indigo-50 rounded`}>
                                         <div>
                                             <h1 className="font-medium">{driver.name}</h1>
                                             <p className="text-sm text-gray-600">{driver.phone}</p>
@@ -349,7 +356,7 @@ function ManagerDashboard() {
                                             onClick={() => assignDriver(driver._id)}
                                             className="bg-indigo-600 text-white px-4 py-1 rounded"
                                         >
-                                            Assign
+                                         {assigned ? 'Assigned' : "Assign" }
                                         </button>
                                     </div>
                                 ))}

@@ -60,8 +60,8 @@ const updateVehicles = async (req, res) => {
             return res.status(404).json({ message: 'Vehicle not found or access denied' })
         }
 
-        const vehicle = await Vehicle.updateOne(
-            {_id:vehicleId},
+        const vehicle = await Vehicle.findByIdAndUpdate(
+            vehicleId,
            { vehicleName,
             ownerName,
             vehicleType,

@@ -7,16 +7,15 @@ const updateProfile = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
         const userId = req.user.id
-        console.log(await User.findOne({_id:userId}))
 
         const { name, phone } = req.body
         const value = validationInput({ name, phone })
         if (value) {
             return res.status(400).json({ message: `Missing field: ${value}` })
         }
-        console.log(name,phone)
-        const user = await User.updateOne(
-            {_id: userId },
+
+        const user = await User.findByIdAndUpdate(
+            userId ,
             {
                 name,
                 phone

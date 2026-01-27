@@ -4,8 +4,12 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
+const localUrl = process.env.API_LOCAL
+const hostUrl = process.env.API_HOST
+
+
 app.use(cors({
-     origin:'http://localhost:5173',
+     origin:hostUrl,
     credentials:true
 }))
 

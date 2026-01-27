@@ -102,8 +102,11 @@ function Login() {
           role: selectedRole
         })
       })
+    
       const data = await response.json()
-      console.log(data)
+      if (!response.ok){
+        alert(data.message)
+      }
 
       if (data.token) {
         localStorage.setItem('token', data.token)

@@ -79,6 +79,7 @@ function Signup() {
     }
 
     setLoading(true)
+    console.log('object',selectedRole)
 
     try {
       const response = await fetch(`${VITE_API_BASE_KEY}/auth/signup`,{

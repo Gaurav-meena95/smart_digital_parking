@@ -92,8 +92,8 @@ const acceptAssignment = async (req, res) => {
                 message: 'Assignment not found or already accepted'
             })
         }
-        const updatedparking = await Parking.updateOne(
-            { _id: parkingId },
+        const updatedparking = await Parking.findByIdAndUpdate(
+            parkingId ,
             { status: 'in_progress' }
         )
 
@@ -134,8 +134,8 @@ const rejectAssignment = async (req, res) => {
             })
         }
 
-        const rejected_Parking = await Parking.updateOne(
-            { _id: parkingId },
+        const rejected_Parking = await Parking.findByIdAndUpdate(
+            parkingId ,
             { assignedDriverId: null, assignedAt: null }
         )
 
@@ -174,8 +174,8 @@ const completeTask = async (req, res) => {
             return res.status(404).json({ message: 'Active assignment not found' })
         }
 
-        const updatedparking = await Parking.updateOne(
-            { _id: parkingId },
+        const updatedparking = await Parking.findByIdAndUpdate(
+            parkingId,
             { status: 'completed', exitTime: new Date() }
         )
         res.status(200).json({

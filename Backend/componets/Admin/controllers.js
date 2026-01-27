@@ -134,8 +134,8 @@ const approveDriver = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' })
         }
-        const user = await User.updateOne(
-            { _id: userId },
+        const user = await User.findByIdAndUpdate(
+            userId ,
             { approvalStatus: 'approved' },
         )
 
@@ -158,9 +158,8 @@ const rejectDriver = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' })
         }
-        const user = await User.updateOne(
-            { _id: userId },
-
+        const user = await User.findByIdAndUpdate(
+            userId ,
             { approvalStatus: 'rejected' },
         )
 
