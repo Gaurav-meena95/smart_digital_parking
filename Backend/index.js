@@ -5,11 +5,11 @@ const app = express()
 app.use(express.json())
 
 const localUrl = process.env.API_LOCAL
-const hostUrl = process.env.API_HOST
+const FRONTEND_URL = process.env.FRONTEND_URL
 
 
 app.use(cors({
-     origin:hostUrl,
+     origin:[localUrl,FRONTEND_URL],
     credentials:true
 }))
 
