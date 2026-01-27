@@ -8,10 +8,7 @@ const localUrl = process.env.API_LOCAL
 const FRONTEND_URL = process.env.FRONTEND_URL
 
 
-app.use(cors({
-     origin:[localUrl,FRONTEND_URL],
-    credentials:true
-}))
+app.use(cors())
 
 const authRoutes = require('./componets/Auth/routes')
 const vehicleManageRoutes = require('./componets/User/vehicles/routes')
