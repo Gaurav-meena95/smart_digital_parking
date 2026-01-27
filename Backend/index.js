@@ -3,11 +3,6 @@ const cors = require('cors')
 const express = require('express')
 const app = express()
 app.use(express.json())
-
-const localUrl = process.env.API_LOCAL
-const FRONTEND_URL = process.env.FRONTEND_URL
-
-
 app.use(cors())
 
 const authRoutes = require('./componets/Auth/routes')

@@ -18,7 +18,7 @@ function ManagerDashboard() {
     const [showDrivers, setShowDrivers] = useState(false)
     const [drivers, setDrivers] = useState([])
     const [assignmentId, setAssignmentId] = useState(null)
-    const [assigned, setAssigned] = useState(false)
+    const [assignedParkingId, setAssignedParkingId] = useState(null)
 
 
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ function ManagerDashboard() {
     });
     const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const filters = ['All', 'Pending Assignment', 'Assigned', 'In Progress', 'Retrieved'];
+    const filters = ['All', 'Pending Assignment', 'Assigned', 'Parked', 'Completed', 'Retrieved'];
 
     useEffect(() => {
         fetchDashboardData();
@@ -64,10 +64,31 @@ function ManagerDashboard() {
                 method: 'GET',
                 headers: header
             })
-            const data = await response.json()
-            if (selectedFilter === 'All') {
-                setAssignments(data || []);
+            const  data = await response.json() || []
+
+            let filteredData = data
+            if (selectedFilter === 'Pending Assignment') {
+                filteredData = data.filter(a => a.status === 'pending')
+            } else if (selectedFilter === 'Assigned') {
+                filteredData = data.filter(a => a.status === 'assigned')
+            } else if (selectedFilter === 'Parked') {
+                filteredData = data.filter(a => a.status === 'park')
+            } else if (selectedFilter === 'Retrieved') {
+                filteredData = data.filter(a => a.taskType === 'retrieve')
+            } else if (selectedFilter === 'Completed') {
+                filteredData = data.filter(a => a.status === 'completed')
             }
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase()
+                filteredData = filteredData.filter(a =>
+                    a.vehicleId ?.toLowerCase().includes(q) ||
+                    a.userId?.toLowerCase().includes(q) ||
+                    a.location?.toLowerCase().includes(q)
+                )
+            }
+            setAssignments(filteredData)
+
+
         } catch (error) {
             console.error('Error fetching assignments:', error);
             setAssignments([]);
@@ -92,10 +113,10 @@ function ManagerDashboard() {
         })
 
         const data = await response.json()
-        if(!response.ok){
+        if (!response.ok) {
             alert(data.message)
         }
-        setAssigned(true)
+        setAssignedParkingId(assignmentId)
         setShowDrivers(false)
         setAssignmentId(null)
         fetchAssignments()
@@ -134,6 +155,8 @@ function ManagerDashboard() {
             </div>
         );
     }
+    
+
 
     return (
         <>
@@ -231,7 +254,7 @@ function ManagerDashboard() {
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                             }`}
                                     >
-                                        {filter} {filter !== 'All' && `(${assignments.filter(a => a.status === filter).length})`}
+                                        {filter} 
                                     </button>
                                 ))}
                             </div>
@@ -249,22 +272,22 @@ function ManagerDashboard() {
                             </div>
                         ) : (
                             assignments.map((assignment) => (
-                                <div key={assignment._id} className="bg-indigo-50  rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-md transition-all">
+                                <div key={assignment._id} className={`bg-indigo-50 rounded-2xl p-6 shadow-xl border transition-all
+                                ${assignment.status === 'assigned' ? 'bg-amber-50/20 pointer-events-none' : ''}`}>
                                     <div className="flex items-start  justify-between mb-6">
                                         <div>
                                             <h3 className="text-xl font-semibold text-gray-900">{assignment.vehicleName}</h3>
                                             <p className="text-gray-600 mt-1">{assignment.vehicleNumber}</p>
                                         </div>
-                                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                                            assignment.status === 'pending'
+                                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${assignment.status === 'pending'
                                             ? 'bg-red-50 text-red-700 border border-red-200'
                                             : assignment.status === 'assigned'
                                                 ? 'bg-blue-100 text-blue-700 border border-blue-300'
                                                 : assignment.status === 'parked'
                                                     ? 'bg-orange-100 text-orange-700 border border-orange-200'
                                                     : assignment.status === 'completed'
-                                                    ? 'bg-green-100  text-green-700 border border-green-300'
-                                                    : 'bg-red-300 text-red-800 border border-red-100'
+                                                        ? 'bg-green-100  text-green-700 border border-green-300'
+                                                        : 'bg-red-300 text-red-800 border border-red-100'
                                             }`}>
                                             {assignment.status}
                                         </span>
@@ -315,16 +338,23 @@ function ManagerDashboard() {
                                         </div>
 
                                         <div className="flex items-center justify-between">
-                                            <span className="text-gray-600 font-medium">Ticket</span>
-                                            <span className="text-gray-900 font-medium">{assignment.ticketId}</span>
+                                            <span className="text-gray-600 font-medium">VehicleId</span>
+                                            <span className="text-gray-900 font-medium">{assignment.vehicleId}</span>
                                         </div>
                                     </div>
 
                                     <button
+                                        disabled={assignment.status === 'assigned'}
                                         onClick={() => handleReassignValet(assignment._id)}
-                                        className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition-all font-medium cursor-pointer"
+                                        className={`w-full py-3 rounded-xl font-medium
+                                            ${assignment.status === 'assigned'
+                                                ? 'bg-gray-400 cursor-not-allowed'
+                                                : assignment.status === 'completed'
+                                                    ? `bg-green-200 blur-sm pointer-events-none`
+                                                    : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                            }`}
                                     >
-                                        {assignment.assignedValet === 'Unassigned' ? 'Assign Driver' : 'Reassign Driver'}
+                                        {assignment.status === 'assigned' ? 'Assigned' : assignment.status === 'completed' ? 'completed' : 'Assign Driver'}
                                     </button>
                                 </div>
                             ))
@@ -336,10 +366,10 @@ function ManagerDashboard() {
                 showDrivers && (
                     <div className={`fixed inset-0 z-50 bg-black/40 flex justify-center items-center`}>
                         <div className="bg-white p-6 rounded w-1/2 max-h-[70vh] flex flex-col">
-                        <h1 className='font-bold text-center'>Select Driver</h1>
+                            <h1 className='font-bold text-center'>Select Driver</h1>
 
                             <div className="flex items-center  gap-2 mb-5">
-                                <ArrowLeft onClick={()=> setShowDrivers(false)} className="cursor-pointer" />
+                                <ArrowLeft onClick={() => setShowDrivers(false)} className="cursor-pointer" />
                                 <span className="">back</span>
                             </div>
 
@@ -347,7 +377,13 @@ function ManagerDashboard() {
                                 {drivers.map(driver => (
                                     <div
                                         key={driver._id}
-                                        className= {assigned ? "blur-sm pointer-events-none bg-green-300" :  `flex justify-between items-center p-3 bg-indigo-50 rounded`}>
+                                        className={
+                                            assignments.find(a => a._id === assignmentId)?.status === 'assigned'
+                                                ? 'blur-sm pointer-events-none bg-green-300 p-3 rounded'
+                                                : 'flex justify-between items-center p-3 bg-indigo-50 rounded'
+                                        }
+
+                                    >
                                         <div>
                                             <h1 className="font-medium">{driver.name}</h1>
                                             <p className="text-sm text-gray-600">{driver.phone}</p>
@@ -356,7 +392,8 @@ function ManagerDashboard() {
                                             onClick={() => assignDriver(driver._id)}
                                             className="bg-indigo-600 text-white px-4 py-1 rounded"
                                         >
-                                         {assigned ? 'Assigned' : "Assign" }
+                                            {assignments.find(a => a._id === assignmentId)?.status === 'assigned' ? 'Assigned' : 'Assign'}
+
                                         </button>
                                     </div>
                                 ))}
