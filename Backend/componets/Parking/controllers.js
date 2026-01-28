@@ -7,7 +7,7 @@ const startparking = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: 'Unauthorized' })
         }
-        const {vehicleId, location, address, paymentMethod } = req.body
+        const { vehicleId, location, address, paymentMethod } = req.body
 
         const value = validationInput({ vehicleId, location, address, paymentMethod })
         if (value) {
@@ -53,9 +53,14 @@ const startparking = async (req, res) => {
             status: 'pending'
         })
 
-        res.status(201).json({
+
+        return res.status(201).json({
             message: 'parking started successfully',
             data: parking
+
+
+
+
         })
     } catch (error) {
         console.log(error)
@@ -69,7 +74,7 @@ const requestRetrieval = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
 
-        const { parkingId } = req.query
+        const { parkingId } = req.body
         if (!parkingId) {
             return res.status(400).json({ message: 'parking ID is required' })
         }
@@ -123,7 +128,7 @@ const endparking = async (req, res) => {
             return res.status(404).json({ message: 'Active parking session not found' })
         }
         const updatedparking = await Parking.findByIdAndUpdated(
-            parkingId ,
+            parkingId,
             { exitTime, status: 'completed' },
             { new: true }
         )
@@ -142,7 +147,7 @@ const getActiveparking = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: 'Unauthorized' })
         }
-
+       
         const parking = await Parking.findOne({
             userId: req.user.id,
             status: { $in: ['active', 'pending', 'in_progress'] }
@@ -151,7 +156,22 @@ const getActiveparking = async (req, res) => {
         if (!parking) {
             return res.status(404).json({ message: 'Active parking session not found' })
         }
-        res.status(200).json({  data: { parking } })
+         const vehicle = await Vehicle.findOne({
+            _id: parking.vehicleId,
+            ownerId: req.user.id,
+            isActive: true
+        })
+
+        if (!vehicle) {
+            return res.status(404).json({ message: 'Vehicle not found' })
+        }
+        return res.status(200).json({ 
+            parking ,
+            vehicle: {
+                vehicleName: vehicle.vehicleName,
+                ownerName: vehicle.ownerName,
+            }
+        })
 
 
     } catch (error) {
@@ -165,14 +185,12 @@ const getparkingHistory = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: 'Unauthorized' })
         }
-
         const parkings = await Parking.find({
             userId: req.user.id,
             status: 'completed'
         }).sort({ entryTime: -1 })
 
         res.status(200).json({
-            
             data: parkings
         })
     } catch (error) {
@@ -199,7 +217,7 @@ const getparkingById = async (req, res) => {
         }
 
         res.status(200).json({
-            
+
             data: { parking }
         })
     } catch (error) {
