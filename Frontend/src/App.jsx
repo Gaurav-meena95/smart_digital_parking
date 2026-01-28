@@ -8,19 +8,32 @@ import DriverDashboard from './components/Driver/Dashboard'
 import ManagerDashboard from './components/Manager/Dashboard'
 import AddDriver from './components/Manager/AddDriver'
 import Home from './components/User/Home'
+import QRScanner from './components/User/QRScanner'
+import VehicleSelection from './components/User/VehicleSelection'
+import BottomNav from './components/User/BottomNav'
+import UserLayout from './components/User/UserLayout'
+import { AddVehicle } from './components/User/AddVehicle'
 function App() {
 
   return (
     <Routes>
       <Route path='/' element={<LandingPage />} />
-      <Route path='/home' element={<Home/>} />
+
+      <Route element={<UserLayout />}>
+        <Route path='/home' element={<Home />} />
+        <Route path='/qr-scanner' element={<QRScanner />} />
+        <Route path='/vehicle-selection' element={<VehicleSelection />} />
+        <Route path='/add-vehicle' element={<AddVehicle />} />
+
+      </Route>
+
       <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
       <Route path='/admin' element={<AdminDashboard />} />
       <Route path='/driver' element={<DriverDashboard />} />
       <Route path='/manager' element={<ManagerDashboard />} />
       <Route path='/manager/add-driver' element={<AddDriver />} />
-  
+
 
     </Routes>
 
