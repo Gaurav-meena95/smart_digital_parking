@@ -6,7 +6,7 @@ const router = express.Router()
 router.use(verifyUserMiddleware)
 
 router.post('/start', startparking)
-router.post('/request-retrieval', requestRetrieval)
+router.patch('/request-retrieval', requestRetrieval)
 router.patch('/end', endparking)
 router.get('/active', getActiveparking)
 router.get('/history', getparkingHistory)

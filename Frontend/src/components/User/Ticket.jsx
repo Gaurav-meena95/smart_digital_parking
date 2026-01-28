@@ -31,8 +31,8 @@ function UserTicket() {
         })
         const data = await response.json()
         if(response.ok){
-            alert('Parking request submitted! A driver will be assigned to park your vehicle.')
             setActiveparking(data)
+
         }
 
     } catch (error) {
@@ -52,14 +52,16 @@ function UserTicket() {
 
     try {
      const response = await fetch(`${VITE_API_BASE_KEY}/parking/request-retrieval`,{
-            method:'POST',
+            method:'PATCH',
             headers:header,
             body:JSON.stringify({parkingId:activeparking.parking._id})
 
         })
         const data = await response.json()
-      alert('Retrieval request submitted! A driver will be assigned to retrieve your vehicle.')
-      navigate('/home')
+        if (response.ok){
+            alert('Retrieval request submitted! A driver will be assigned to retrieve your vehicle.')
+            navigate('/home')
+        }
     } catch (error) {
       alert('Failed to request retrieval: ' + error.message)
     }

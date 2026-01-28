@@ -50,7 +50,7 @@ const startparking = async (req, res) => {
             gst,
             totalAmount,
             paymentMethod,
-            status: 'pending'
+            status: 'active'
         })
 
 
@@ -82,7 +82,6 @@ const requestRetrieval = async (req, res) => {
         const parking = await Parking.findOne({
             _id: parkingId,
             userId: req.user.id,
-            status: 'in_progress'
         })
 
         if (!parking) {
@@ -96,10 +95,8 @@ const requestRetrieval = async (req, res) => {
                 status: 'pending',
                 assignedDriverId: null,
                 assignedAt: null
-            },
-            { new: true }
+            }
         )
-
         res.status(200).json({
             message: 'Retrieval request submitted successfully',
             data: updatedparking
