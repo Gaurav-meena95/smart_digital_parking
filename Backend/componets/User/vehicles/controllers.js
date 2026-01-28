@@ -48,8 +48,12 @@ const updateVehicles = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
 
-        const { vehicleId } = req.query
-        const { vehicleName, ownerName, vehicleType, isActive } = req.body
+        const { vehicleId, vehicleName, ownerName, vehicleType } = req.body
+
+        const value = validationInput({ vehicleId, vehicleName, ownerName, vehicleType })
+        if (value) {
+            return res.status(400).json({ message: `Missing field: ${value}` })
+        }
 
         const existingVehicle = await Vehicle.findOne({
             _id: vehicleId,
@@ -62,10 +66,11 @@ const updateVehicles = async (req, res) => {
 
         const vehicle = await Vehicle.findByIdAndUpdate(
             vehicleId,
-           { vehicleName,
-            ownerName,
-            vehicleType,
-            isActive}
+            {
+                vehicleName,
+                ownerName,
+                vehicleType,
+            }
         )
 
         res.status(200).json({
@@ -87,10 +92,9 @@ const deleteVehicles = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
 
-        const { id } = req.query
-
+        const { vehicleId} = req.body
         const vehicle = await Vehicle.findOne({
-            _id: id,
+            _id: vehicleId,
             ownerId: req.user.id
         })
 
@@ -98,7 +102,7 @@ const deleteVehicles = async (req, res) => {
             return res.status(404).json({ message: 'Vehicle not found or access denied' })
         }
 
-        const deleteedVehical = await Vehicle.deleteOne({_id:id})
+        const deleteedVehical = await Vehicle.deleteOne({ _id: vehicleId })
         res.status(200).json({
             deleteedVehical,
             message: 'Vehicle deleted successfully'
@@ -122,7 +126,7 @@ const getAllVehicles = async (req, res) => {
         }).sort({ createdAt: -1 })
 
         res.status(200).json({
-            
+
             message: 'Vehicles fetched successfully',
             data: vehicles
         })

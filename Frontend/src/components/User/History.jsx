@@ -22,12 +22,12 @@ function UserHistory() {
 
     const fetchHistory = async () => {
         try {
-            const response = await fetch(`${VITE_API_BASE_KEY}/parking/history`,{
-                method:'GET',
-                headers:header
+            const response = await fetch(`${VITE_API_BASE_KEY}/parking/history`, {
+                method: 'GET',
+                headers: header
             })
             const data = await response.json()
-            if (response.ok){
+            if (response.ok) {
                 setparkings(data.data || [])
             }
         } catch (error) {

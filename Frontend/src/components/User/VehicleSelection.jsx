@@ -24,12 +24,12 @@ function VehicleSelection() {
 
     const fetchVehicles = async () => {
         try {
-            const response = await fetch(`${VITE_API_BASE_KEY}/vehicles/all`,{
-                method:'GET',
-                headers:header
+            const response = await fetch(`${VITE_API_BASE_KEY}/vehicles/all`, {
+                method: 'GET',
+                headers: header
             })
             const data = await response.json()
-            if (response.ok){
+            if (response.ok) {
                 setVehicles(data.data || [])
             }
         } catch (error) {
@@ -72,7 +72,6 @@ function VehicleSelection() {
                         </button>
                         <div>
                             <h1 className="text-3xl lg:text-4xl font-bold">Select Your Vehicle</h1>
-                            {/* <p className="text-white/90 mt-2">Choose which vehicle you're parking at {scannedData?.parkingLocation || 'this location'}</p> */}
                         </div>
                     </div>
                 </div>

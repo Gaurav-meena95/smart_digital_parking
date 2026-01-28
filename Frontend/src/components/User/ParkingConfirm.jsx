@@ -78,11 +78,11 @@ function Confirmparking() {
         setLoading(true)
 
         try {
-            const response = await fetch(`${VITE_API_BASE_KEY}/parking/start`,{
-                method:"POST",
-                headers:header,
-                body:JSON.stringify({
-                    vehicleId:selectedVehicle._id, location:scannedData.parkingLocation, address:scannedData.address, paymentMethod:selectedPayment
+            const response = await fetch(`${VITE_API_BASE_KEY}/parking/start`, {
+                method: "POST",
+                headers: header,
+                body: JSON.stringify({
+                    vehicleId: selectedVehicle._id, location: scannedData.parkingLocation, address: scannedData.address, paymentMethod: selectedPayment
                 })
 
             })
@@ -181,8 +181,8 @@ function Confirmparking() {
                                             key={method.id}
                                             onClick={() => setSelectedPayment(method.id)}
                                             className={`p-6 rounded-2xl border-2 transition-all ${isSelected
-                                                    ? method.selectedColor
-                                                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                                                ? method.selectedColor
+                                                : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                                                 }`}
                                         >
                                             <div className="flex flex-col items-center gap-3">
