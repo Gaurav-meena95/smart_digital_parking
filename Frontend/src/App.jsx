@@ -15,6 +15,8 @@ import UserLayout from './components/User/UserLayout'
 import { AddVehicle } from './components/User/AddVehicle'
 import Confirmparking from './components/User/ParkingConfirm'
 import UserTicket from './components/User/Ticket'
+import UserHistory from './components/User/History'
+import UserSettings from './components/User/Setting'
 function App() {
 
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path='/add-vehicle' element={<AddVehicle />} />
         <Route path='/confirm-parking' element={<Confirmparking />} />
         <Route path='/ticket' element={<UserTicket />} />
+        <Route path='/history' element={<UserHistory />} />
+        <Route path='/settings' element={<UserSettings />} />
 
       </Route>
 

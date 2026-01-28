@@ -89,7 +89,7 @@ function UserTicket() {
   return (
     <div className="min-h-screen bg-gray-50 pb-24 lg:pb-8">
       <div className="max-w-4xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
-        <div className='bg-linear-to-r from-indigo-600  to-purple-800  mb-8 lg:mb-12 rounded-2xl'>
+        <div className='bg-indigo-600   mb-8 lg:mb-12 rounded-2xl'>
           <div className="mb-8 p-5 lg:mb-12">
             <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">parking Ticket</h1>
             <p className="text-lg text-gray-300/70">
@@ -242,25 +242,25 @@ function UserTicket() {
               <h4 className="text-xl font-semibold text-indigo-800 mb-4">How it works:</h4>
               <div className="grid md:grid-cols-2 gap-4 text-indigo-700">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm font-bold">1</span>
                   </div>
                   <p>Scan QR code at entry to start parking</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm font-bold">2</span>
                   </div>
                   <p>Keep the QR code ready for exit</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm font-bold">3</span>
                   </div>
                   <p>Payment is processed automatically</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 bg-indigo-200 rounded-full flex items-center justify-center shrink-0 mt-0.5">
                     <span className="text-sm font-bold">4</span>
                   </div>
                   <p>View history in the History section</p>
