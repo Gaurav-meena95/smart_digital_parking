@@ -7,8 +7,7 @@ const startparking = async (req, res) => {
         if (!req.user || !req.user.id) {
             return res.status(401).json({ message: 'Unauthorized' })
         }
-        const { vehicleId } = req.query
-        const { location, address, paymentMethod } = req.body
+        const {vehicleId, location, address, paymentMethod } = req.body
 
         const value = validationInput({ vehicleId, location, address, paymentMethod })
         if (value) {

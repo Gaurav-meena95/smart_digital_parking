@@ -4,9 +4,6 @@ import { ArrowLeft, Car } from 'lucide-react'
 
 export function AddVehicle() {
     const navigate = useNavigate()
-    const location = useLocation()
-    const returnTo = location.state?.returnTo || '/home'
-    const scannedData = location.state?.scannedData
     const VITE_API_BASE_KEY = import.meta.env.VITE_API_BASE_KEY
     const token = localStorage.getItem('token')
     const refreshToken = localStorage.getItem('refreshToken')
@@ -20,7 +17,7 @@ export function AddVehicle() {
         vehicleName: '',
         vehicleNumber: '',
         ownerName: '',
-        vehicleType: 'car'
+        vehicleType: 'Car'
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')

@@ -13,6 +13,7 @@ import VehicleSelection from './components/User/VehicleSelection'
 import BottomNav from './components/User/BottomNav'
 import UserLayout from './components/User/UserLayout'
 import { AddVehicle } from './components/User/AddVehicle'
+import Confirmparking from './components/User/ParkingConfirm'
 function App() {
 
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path='/qr-scanner' element={<QRScanner />} />
         <Route path='/vehicle-selection' element={<VehicleSelection />} />
         <Route path='/add-vehicle' element={<AddVehicle />} />
+        <Route path='/confirm-parking' element={<Confirmparking />} />
 
       </Route>
 
