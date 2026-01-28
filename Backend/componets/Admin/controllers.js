@@ -26,7 +26,7 @@ const getDashboardStats = async (req, res) => {
 
         const totalparkings = await Parking.find({ status: 'completed' })
 
-        const activeparkings = await Parking.find({ status: 'active' })
+        const activeparkings = await Parking.find({ status: 'pending' })
 
         const todayTickets = todayparkings.length
         const yesterdayTickets = yesterdayparkings.length

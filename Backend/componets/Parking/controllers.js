@@ -27,7 +27,7 @@ const startparking = async (req, res) => {
         const activeparking = await Parking.findOne({
             userId: req.user.id,
             vehicleId,
-            status: 'active'
+            status: 'pending'
         })
 
         if (activeparking) {
@@ -50,7 +50,7 @@ const startparking = async (req, res) => {
             gst,
             totalAmount,
             paymentMethod,
-            status: 'active'
+            status: 'pending'
         })
 
 
@@ -147,7 +147,7 @@ const getActiveparking = async (req, res) => {
        
         const parking = await Parking.findOne({
             userId: req.user.id,
-            status: { $in: ['active', 'pending', 'in_progress'] }
+            status: { $in: ['pending', 'in_progress'] }
         }).sort({ entryTime: -1 })
 
         if (!parking) {

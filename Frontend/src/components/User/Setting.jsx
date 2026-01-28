@@ -25,22 +25,6 @@ function UserSettings() {
         }
     }
 
-    const handleEditProfile = async () => {
-        const newName = prompt('Enter your new name:', user?.name || '')
-        if (newName && newName.trim()) {
-            setLoading(true)
-            try {
-                const data = await api.users.updateProfile({ name: newName.trim() })
-                setUser(data.data)
-                localStorage.setItem('user', JSON.stringify(data.data))
-                alert('Profile updated successfully!')
-            } catch (error) {
-                alert('Failed to update profile: ' + error.message)
-            } finally {
-                setLoading(false)
-            }
-        }
-    }
 
     const handleManageVehicles = () => {
         navigate('/manage-vehicles')
@@ -84,13 +68,6 @@ function UserSettings() {
                             </div>
                             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{user?.name || 'User'}</h3>
                             <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">{user?.email || ''}</p>
-                            <button
-                                onClick={handleEditProfile}
-                                className="w-full bg-indigo-600 text-white py-2.5 sm:py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center gap-2"
-                            >
-                                <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                                Edit Profile
-                            </button>
                         </div>
                     </div>
 

@@ -18,6 +18,8 @@ import UserTicket from './components/User/Ticket'
 import UserHistory from './components/User/History'
 import UserSettings from './components/User/Setting'
 import ManageVehicles from './components/User/ManageVehicles'
+import HelpSupport from './components/User/HelpSupport'
+import FAQ from './components/User/FAQ'
 function App() {
 
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path='/history' element={<UserHistory />} />
         <Route path='/settings' element={<UserSettings />} />
         <Route path='/manage-vehicles' element={<ManageVehicles />} />
+        <Route path='/help-support' element={<HelpSupport />} />
+        <Route path='/faq' element={<FAQ/>} />
 
       </Route>
 
