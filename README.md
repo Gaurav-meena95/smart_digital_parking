@@ -48,7 +48,7 @@ A full-stack parking management system with separate interfaces for users, drive
 
 ### Frontend Deployment (Vercel/Netlify)
 
-1. Update the API URL in `Frontend/.env.production`:
+1. Update the API URL in `Frontend/.env.production`:https://smart-digital-parking.vercel.app/
    ```
    VITE_API_BASE_URL=https://smart-digital-parking-system.onrender.com/api
    ```
